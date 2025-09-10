@@ -1,0 +1,64 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18.x'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Build package
+      run: npm run build
+      
+    - name: Run tests
+      run: npm run test
+      
+    - name: Create Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        body: |
+          ## Changes in this Release
+          
+          See the [CHANGELOG.md](./CHANGELOG.md) for detailed information about this release.
+          
+          ## Installation
+          
+          ```bash
+          npm install @adquimo/react-sdk@${{ github.ref_name }}
+          ```
+          
+          ## Usage
+          
+          ```typescript
+          import { AdquimoSDK } from '@adquimo/react-sdk';
+          
+          const sdk = new AdquimoSDK({
+            apiKey: 'your-api-key',
+          });
+          
+          await sdk.initialize();
+          ```
+        draft: false
+        prerelease: false

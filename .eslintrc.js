@@ -1,0 +1,102 @@
+module.exports = {
+  root: true,
+  env: {
+    browser: true,
+    es2021: true,
+    node: true,
+    jest: true,
+  },
+  extends: [
+    'eslint:recommended',
+    '@typescript-eslint/recommended',
+    'plugin:react/recommended',
+    'plugin:react-hooks/recommended',
+  ],
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    ecmaFeatures: {
+      jsx: true,
+    },
+    ecmaVersion: 2021,
+    sourceType: 'module',
+  },
+  plugins: [
+    '@typescript-eslint',
+    'react',
+    'react-hooks',
+  ],
+  rules: {
+    // TypeScript rules
+    '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+    '@typescript-eslint/no-explicit-any': 'warn',
+    '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
+    '@typescript-eslint/no-non-null-assertion': 'warn',
+    '@typescript-eslint/prefer-const': 'error',
+    '@typescript-eslint/no-var-requires': 'off',
+    
+    // React rules
+    'react/react-in-jsx-scope': 'off',
+    'react/prop-types': 'off',
+    'react/jsx-uses-react': 'off',
+    'react/jsx-uses-vars': 'error',
+    'react/jsx-key': 'error',
+    'react/jsx-no-duplicate-props': 'error',
+    'react/jsx-no-undef': 'error',
+    'react/no-array-index-key': 'warn',
+    'react/no-unescaped-entities': 'off',
+    'react/display-name': 'off',
+    
+    // React Hooks rules
+    'react-hooks/rules-of-hooks': 'error',
+    'react-hooks/exhaustive-deps': 'warn',
+    
+    // General rules
+    'no-console': 'warn',
+    'no-debugger': 'error',
+    'no-duplicate-imports': 'error',
+    'no-unused-vars': 'off', // Handled by @typescript-eslint/no-unused-vars
+    'prefer-const': 'error',
+    'no-var': 'error',
+    'object-shorthand': 'error',
+    'prefer-template': 'error',
+    'template-curly-spacing': 'error',
+    'arrow-spacing': 'error',
+    'comma-dangle': ['error', 'always-multiline'],
+    'comma-spacing': 'error',
+    'comma-style': 'error',
+    'computed-property-spacing': 'error',
+    'func-call-spacing': 'error',
+    'key-spacing': 'error',
+    'keyword-spacing': 'error',
+    'object-curly-spacing': ['error', 'always'],
+    'semi': ['error', 'always'],
+    'semi-spacing': 'error',
+    'space-before-blocks': 'error',
+    'space-before-function-paren': ['error', 'never'],
+    'space-in-parens': 'error',
+    'space-infix-ops': 'error',
+    'space-unary-ops': 'error',
+    'spaced-comment': 'error',
+    'quotes': ['error', 'single', { avoidEscape: true }],
+    'indent': ['error', 2, { SwitchCase: 1 }],
+    'max-len': ['warn', { code: 120, ignoreUrls: true, ignoreStrings: true }],
+    'no-trailing-spaces': 'error',
+    'eol-last': 'error',
+    'no-multiple-empty-lines': ['error', { max: 2, maxEOF: 1 }],
+    'no-mixed-spaces-and-tabs': 'error',
+    'no-irregular-whitespace': 'error',
+  },
+  settings: {
+    react: {
+      version: 'detect',
+    },
+  },
+  ignorePatterns: [
+    'node_modules/',
+    'dist/',
+    'coverage/',
+    '*.js',
+    '*.d.ts',
+  ],
+};
