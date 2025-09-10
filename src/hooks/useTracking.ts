@@ -33,11 +33,11 @@ export function useTracking(
   useEffect(() => {
     if (!sdk) return;
 
-      const onError: ErrorCallback = (error) => {
-        const jsError = new Error(error.message);
-        jsError.name = error.code;
-        errorRef.current = jsError;
-      };
+    const onError: ErrorCallback = (error) => {
+      const jsError = new Error(error.message);
+      jsError.name = error.code;
+      errorRef.current = jsError;
+    };
 
     sdk.setCallbacks({ onError });
 
