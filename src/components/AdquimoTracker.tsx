@@ -3,7 +3,7 @@
  * Automatic tracking component for page views and user interactions
  */
 
-import React, { useEffect, useRef, ReactNode } from 'react';
+import { useEffect, useRef, ReactNode } from 'react';
 import { useAdquimo } from './AdquimoProvider';
 import { useTracking } from '../hooks/useTracking';
 

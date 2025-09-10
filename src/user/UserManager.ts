@@ -73,13 +73,13 @@ export class UserManager {
       }
 
       // Validate user properties
-      this.validateUserProperties(user.properties);
+      this.validateUserProperties(user.properties || {});
 
       // Save user to storage
       await this.storageManager.set(ADQUIMO_CONSTANTS.STORAGE_KEYS.USER_ID, user);
       this.currentUser = user;
 
-      this.logger.info('User identified', { userId, propertiesCount: Object.keys(user.properties).length });
+      this.logger.info('User identified', { userId, propertiesCount: Object.keys(user.properties || {}).length });
     } catch (error) {
       this.logger.error('Failed to identify user', error);
       throw this.createError('USER_IDENTIFY_ERROR', error);
@@ -140,7 +140,7 @@ export class UserManager {
         ...this.currentUser,
         properties: {
           ...this.currentUser.properties,
-          ...properties,
+          ...(properties || {}),
         },
         lastSeenAt: new Date(),
       };
@@ -151,7 +151,7 @@ export class UserManager {
 
       this.logger.debug('User properties updated', {
         userId: this.currentUser.id,
-        propertiesCount: Object.keys(updatedUser.properties).length,
+        propertiesCount: Object.keys(updatedUser.properties || {}).length,
       });
     } catch (error) {
       this.logger.error('Failed to update user properties', error);

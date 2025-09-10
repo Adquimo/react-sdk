@@ -121,7 +121,7 @@ export class NetworkManager {
       }
     }
 
-    return this.createErrorResponse(lastError || new Error('Unknown error'));
+    return this.createErrorResponse(lastError || new Error('Unknown error')) as ApiResponse<T>;
   }
 
   /**
@@ -134,8 +134,8 @@ export class NetworkManager {
     try {
       const response = await fetch(options.url, {
         method: options.method,
-        headers: options.headers,
-        body: options.body ? JSON.stringify(options.body) : undefined,
+        headers: options.headers || {},
+        body: options.body ? JSON.stringify(options.body) : null,
         signal: controller.signal,
       });
 

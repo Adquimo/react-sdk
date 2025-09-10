@@ -33,9 +33,11 @@ export function useTracking(
   useEffect(() => {
     if (!sdk) return;
 
-    const onError: ErrorCallback = (error) => {
-      errorRef.current = error;
-    };
+      const onError: ErrorCallback = (error) => {
+        const jsError = new Error(error.message);
+        jsError.name = error.code;
+        errorRef.current = jsError;
+      };
 
     sdk.setCallbacks({ onError });
 
@@ -81,7 +83,8 @@ export function useTracking(
       const mergedProperties = { ...properties, ...eventProperties };
       await sdk.trackPageView(url, title, referrer, mergedProperties);
     } catch (error) {
-      errorRef.current = error instanceof Error ? error : new Error(String(error));
+      const jsError = error instanceof Error ? error : new Error(String(error));
+      errorRef.current = jsError;
     }
   }, [sdk, enabled, properties]);
 
@@ -98,7 +101,8 @@ export function useTracking(
       const mergedProperties = { ...properties, ...eventProperties };
       await sdk.trackClick(element, selector, text, mergedProperties);
     } catch (error) {
-      errorRef.current = error instanceof Error ? error : new Error(String(error));
+      const jsError = error instanceof Error ? error : new Error(String(error));
+      errorRef.current = jsError;
     }
   }, [sdk, enabled, properties]);
 
@@ -112,7 +116,8 @@ export function useTracking(
     try {
       await sdk.identify(userId, userProperties);
     } catch (error) {
-      errorRef.current = error instanceof Error ? error : new Error(String(error));
+      const jsError = error instanceof Error ? error : new Error(String(error));
+      errorRef.current = jsError;
     }
   }, [sdk, enabled]);
 
@@ -126,7 +131,8 @@ export function useTracking(
     try {
       await sdk.alias(anonymousId, userId);
     } catch (error) {
-      errorRef.current = error instanceof Error ? error : new Error(String(error));
+      const jsError = error instanceof Error ? error : new Error(String(error));
+      errorRef.current = jsError;
     }
   }, [sdk, enabled]);
 
@@ -137,7 +143,8 @@ export function useTracking(
     try {
       await sdk.reset();
     } catch (error) {
-      errorRef.current = error instanceof Error ? error : new Error(String(error));
+      const jsError = error instanceof Error ? error : new Error(String(error));
+      errorRef.current = jsError;
     }
   }, [sdk, enabled]);
 

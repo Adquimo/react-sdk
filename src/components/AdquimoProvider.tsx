@@ -3,8 +3,9 @@
  * React context provider for Adquimo SDK
  */
 
-import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { AdquimoSDK, AdquimoConfig } from '../types';
+import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { AdquimoConfig, AdquimoError } from '../types';
+import { AdquimoSDK } from '../core/AdquimoSDK';
 
 interface AdquimoContextValue {
   sdk: AdquimoSDK | null;
@@ -44,15 +45,17 @@ export function AdquimoProvider({
 
         // Set up callbacks
         adquimoSDK.setCallbacks({
-          onError: (error) => {
+          onError: (error: AdquimoError) => {
             if (mounted) {
-              setError(error);
-              onError?.(error);
+              const jsError = new Error(error.message);
+              jsError.name = error.code;
+              setError(jsError);
+              onError?.(jsError);
             }
           },
-          onSuccess: (message) => {
+          onSuccess: (data: unknown) => {
             if (mounted) {
-              onSuccess?.(message);
+              onSuccess?.(String(data));
             }
           },
         });

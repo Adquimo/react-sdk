@@ -112,25 +112,25 @@ export interface Event {
   /** Event name */
   name: string;
   /** Event category */
-  category?: string;
+  category?: string | undefined;
   /** Event action */
-  action?: string;
+  action?: string | undefined;
   /** Event label */
-  label?: string;
+  label?: string | undefined;
   /** Event value */
-  value?: number;
+  value?: number | undefined;
   /** Event properties */
-  properties?: Record<string, unknown>;
+  properties?: Record<string, unknown> | undefined;
   /** User ID associated with the event */
-  userId?: string;
+  userId?: string | undefined;
   /** Session ID associated with the event */
-  sessionId?: string;
+  sessionId?: string | undefined;
   /** Event timestamp */
   timestamp: Date;
   /** Event source */
-  source?: string;
+  source?: string | undefined;
   /** Event version */
-  version?: string;
+  version?: string | undefined;
 }
 
 export interface PageView {
@@ -139,19 +139,19 @@ export interface PageView {
   /** Page URL */
   url: string;
   /** Page title */
-  title?: string;
+  title?: string | undefined;
   /** Referrer URL */
-  referrer?: string;
+  referrer?: string | undefined;
   /** Page properties */
-  properties?: Record<string, unknown>;
+  properties?: Record<string, unknown> | undefined;
   /** User ID associated with the page view */
-  userId?: string;
+  userId?: string | undefined;
   /** Session ID associated with the page view */
-  sessionId?: string;
+  sessionId?: string | undefined;
   /** Page view timestamp */
   timestamp: Date;
   /** Time spent on page in milliseconds */
-  timeOnPage?: number;
+  timeOnPage?: number | undefined;
 }
 
 export interface ClickEvent {
@@ -160,22 +160,22 @@ export interface ClickEvent {
   /** Element that was clicked */
   element: string;
   /** Element selector */
-  selector?: string;
+  selector?: string | undefined;
   /** Element text content */
-  text?: string;
+  text?: string | undefined;
   /** Element properties */
-  properties?: Record<string, unknown>;
+  properties?: Record<string, unknown> | undefined;
   /** User ID associated with the click */
-  userId?: string;
+  userId?: string | undefined;
   /** Session ID associated with the click */
-  sessionId?: string;
+  sessionId?: string | undefined;
   /** Click timestamp */
   timestamp: Date;
   /** Mouse coordinates */
   coordinates?: {
     x: number;
     y: number;
-  };
+  } | undefined;
 }
 
 // ============================================================================
@@ -282,11 +282,11 @@ export interface FunnelStep {
   /** Step order */
   order: number;
   /** Step properties */
-  properties?: Record<string, unknown>;
+  properties?: Record<string, unknown> | undefined;
   /** Conversion rate to next step */
-  conversionRate?: number;
+  conversionRate?: number | undefined;
   /** Drop-off rate */
-  dropOffRate?: number;
+  dropOffRate?: number | undefined;
 }
 
 export interface Funnel {
@@ -310,15 +310,15 @@ export interface AdquimoError {
   /** Error message */
   message: string;
   /** Error details */
-  details?: Record<string, unknown>;
+  details?: Record<string, unknown> | undefined;
   /** Error timestamp */
   timestamp: Date;
   /** Error stack trace */
-  stack?: string;
+  stack?: string | undefined;
   /** User ID associated with the error */
-  userId?: string;
+  userId?: string | undefined;
   /** Session ID associated with the error */
-  sessionId?: string;
+  sessionId?: string | undefined;
 }
 
 export interface ValidationError extends AdquimoError {
@@ -430,6 +430,46 @@ export type SessionProperties = Record<string, unknown>;
 export type TrackingCallback = (event: Event) => void;
 export type ErrorCallback = (error: AdquimoError) => void;
 export type SuccessCallback = (data: unknown) => void;
+
+// ============================================================================
+// INTERFACE OPTIONS
+// ============================================================================
+
+export interface CreateEventOptions {
+  name: string;
+  properties?: Record<string, unknown> | undefined;
+  category?: string | undefined;
+  action?: string | undefined;
+  label?: string | undefined;
+  value?: number | undefined;
+}
+
+export interface CreatePageViewOptions {
+  url: string;
+  title?: string | undefined;
+  referrer?: string | undefined;
+  properties?: Record<string, unknown> | undefined;
+}
+
+export interface CreateClickEventOptions {
+  element: string;
+  selector?: string | undefined;
+  text?: string | undefined;
+  properties?: Record<string, unknown> | undefined;
+}
+
+export interface AnalyticsOptions {
+  timeRange?: {
+    start: Date;
+    end: Date;
+  } | undefined;
+  metrics?: string[] | undefined;
+  dimensions?: string[] | undefined;
+  filters?: Record<string, unknown> | undefined;
+  groupBy?: string[] | undefined;
+  orderBy?: string | undefined;
+  limit?: number | undefined;
+}
 
 // ============================================================================
 // CONSTANTS

@@ -12,8 +12,14 @@ import {
   AdquimoError,
   BatchRequest,
   ADQUIMO_CONSTANTS,
+  TrackingCallback,
   ErrorCallback,
   SuccessCallback,
+  CreateEventOptions,
+  CreatePageViewOptions,
+  CreateClickEventOptions,
+  AnalyticsOptions,
+  StorageConfig,
 } from '../types';
 import { Logger } from '../utils/Logger';
 import { StorageManager } from '../utils/StorageManager';
@@ -42,15 +48,15 @@ export class AdquimoSDK {
   private flushTimer?: NodeJS.Timeout;
   private eventQueue: Event[] = [];
   private callbacks: {
-    onEvent?: TrackingCallback;
-    onError?: ErrorCallback;
-    onSuccess?: SuccessCallback;
+    onEvent?: TrackingCallback | undefined;
+    onError?: ErrorCallback | undefined;
+    onSuccess?: SuccessCallback | undefined;
   } = {};
 
   constructor(config: AdquimoConfig) {
     this.config = this.mergeWithDefaults(config);
     this.logger = new Logger(this.config.debug);
-    this.storageManager = new StorageManager(this.config.storageConfig);
+    this.storageManager = new StorageManager(this.config.storageConfig as Required<StorageConfig>);
     this.networkManager = new NetworkManager(this.config);
     this.eventValidator = new EventValidator();
     this.userManager = new UserManager(this.storageManager, this.logger);
@@ -124,14 +130,15 @@ export class AdquimoSDK {
     }
 
     try {
-      const event = await this.trackingManager.createEvent({
+      const eventOptions: CreateEventOptions = {
         name,
-        properties,
-        category,
-        action,
-        label,
-        value,
-      });
+        properties: properties || undefined,
+        category: category || undefined,
+        action: action || undefined,
+        label: label || undefined,
+        value: value || undefined,
+      };
+      const event = await this.trackingManager.createEvent(eventOptions);
 
       await this.queueEvent(event);
       this.logger.debug('Event tracked', { eventName: name, eventId: event.id });
@@ -157,14 +164,34 @@ export class AdquimoSDK {
     }
 
     try {
-      const pageView = await this.trackingManager.createPageView({
+      const pageViewOptions: CreatePageViewOptions = {
         url,
-        title,
-        referrer,
-        properties,
-      });
+        title: title || undefined,
+        referrer: referrer || undefined,
+        properties: properties || undefined,
+      };
+      const pageView = await this.trackingManager.createPageView(pageViewOptions);
 
-      await this.queueEvent(pageView);
+      // Convert PageView to Event for queueing
+      const event: Event = {
+        id: pageView.id,
+        name: 'page_view',
+        category: 'page',
+        action: 'view',
+        properties: {
+          url: pageView.url,
+          title: pageView.title,
+          referrer: pageView.referrer,
+          ...pageView.properties,
+        },
+        userId: pageView.userId,
+        sessionId: pageView.sessionId,
+        timestamp: pageView.timestamp,
+        source: 'sdk',
+        version: ADQUIMO_CONSTANTS.VERSION,
+      };
+
+      await this.queueEvent(event);
       this.logger.debug('Page view tracked', { url, pageViewId: pageView.id });
     } catch (error) {
       const adquimoError = this.createError('PAGE_VIEW_ERROR', error);
@@ -188,14 +215,35 @@ export class AdquimoSDK {
     }
 
     try {
-      const clickEvent = await this.trackingManager.createClickEvent({
+      const clickEventOptions: CreateClickEventOptions = {
         element,
-        selector,
-        text,
-        properties,
-      });
+        selector: selector || undefined,
+        text: text || undefined,
+        properties: properties || undefined,
+      };
+      const clickEvent = await this.trackingManager.createClickEvent(clickEventOptions);
 
-      await this.queueEvent(clickEvent);
+      // Convert ClickEvent to Event for queueing
+      const event: Event = {
+        id: clickEvent.id,
+        name: 'click',
+        category: 'interaction',
+        action: 'click',
+        properties: {
+          element: clickEvent.element,
+          selector: clickEvent.selector,
+          text: clickEvent.text,
+          coordinates: clickEvent.coordinates,
+          ...clickEvent.properties,
+        },
+        userId: clickEvent.userId,
+        sessionId: clickEvent.sessionId,
+        timestamp: clickEvent.timestamp,
+        source: 'sdk',
+        version: ADQUIMO_CONSTANTS.VERSION,
+      };
+
+      await this.queueEvent(event);
       this.logger.debug('Click event tracked', { element, clickId: clickEvent.id });
     } catch (error) {
       const adquimoError = this.createError('CLICK_ERROR', error);
@@ -285,7 +333,10 @@ export class AdquimoSDK {
     }
 
     try {
-      return await this.analyticsManager.getAnalytics(timeRange);
+      const options: AnalyticsOptions = {
+        timeRange: timeRange || undefined,
+      };
+      return await this.analyticsManager.getAnalytics(options);
     } catch (error) {
       const adquimoError = this.createError('ANALYTICS_ERROR', error);
       this.logger.error('Failed to get analytics', adquimoError);
@@ -297,9 +348,9 @@ export class AdquimoSDK {
    * Set callbacks
    */
   setCallbacks(callbacks: {
-    onEvent?: TrackingCallback;
-    onError?: ErrorCallback;
-    onSuccess?: SuccessCallback;
+    onEvent?: TrackingCallback | undefined;
+    onError?: ErrorCallback | undefined;
+    onSuccess?: SuccessCallback | undefined;
   }): void {
     this.callbacks = { ...this.callbacks, ...callbacks };
   }
@@ -447,9 +498,9 @@ export class AdquimoSDK {
       code,
       message,
       timestamp: new Date(),
-      stack,
-      userId: this.userManager.getCurrentUser()?.id,
-      sessionId: this.sessionManager.getCurrentSession()?.id,
+      stack: stack || undefined,
+      userId: this.userManager.getCurrentUser()?.id || undefined,
+      sessionId: this.sessionManager.getCurrentSession()?.id || undefined,
     };
   }
 }

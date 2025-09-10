@@ -1,9 +1,9 @@
-import resolve from '@rollup/plugin-node-resolve';
-import commonjs from '@rollup/plugin-commonjs';
-import typescript from '@rollup/plugin-typescript';
-import babel from '@rollup/plugin-babel';
-import terser from '@rollup/plugin-terser';
-import dts from 'rollup-plugin-dts';
+const resolve = require('@rollup/plugin-node-resolve');
+const commonjs = require('@rollup/plugin-commonjs');
+const typescript = require('@rollup/plugin-typescript');
+const babel = require('@rollup/plugin-babel');
+const terser = require('@rollup/plugin-terser');
+const dts = require('rollup-plugin-dts');
 
 const packageJson = require('./package.json');
 
@@ -40,7 +40,7 @@ const commonConfig = {
   ],
 };
 
-export default [
+module.exports = [
   // ESM build
   {
     ...commonConfig,
@@ -98,15 +98,5 @@ export default [
         },
       }),
     ],
-  },
-  // Type definitions
-  {
-    input: 'dist/index.d.ts',
-    output: {
-      file: 'dist/index.d.ts',
-      format: 'esm',
-    },
-    plugins: [dts()],
-    external: [/\.css$/],
   },
 ];

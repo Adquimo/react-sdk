@@ -9,7 +9,7 @@ export interface StorageItem {
   key: string;
   value: unknown;
   timestamp: Date;
-  ttl?: number; // Time to live in milliseconds
+  ttl?: number | undefined; // Time to live in milliseconds
 }
 
 export class StorageManager {
@@ -50,7 +50,7 @@ export class StorageManager {
         key: fullKey,
         value,
         timestamp: new Date(),
-        ttl,
+        ttl: ttl || undefined,
       };
 
       const serializedValue = JSON.stringify(item);
@@ -60,7 +60,11 @@ export class StorageManager {
         throw new Error('Value exceeds maximum storage size');
       }
 
-      this.storage.setItem(fullKey, serializedValue);
+      if (this.isLocalStorage) {
+        (this.storage as Storage).setItem(fullKey, serializedValue);
+      } else {
+        (this.storage as Map<string, string>).set(fullKey, serializedValue);
+      }
     } catch (error) {
       throw this.createError('STORAGE_SET_ERROR', error);
     }
@@ -72,7 +76,9 @@ export class StorageManager {
   async get<T = unknown>(key: string): Promise<T | null> {
     try {
       const fullKey = this.getFullKey(key);
-      const serializedValue = this.storage.getItem(fullKey);
+      const serializedValue = this.isLocalStorage
+        ? (this.storage as Storage).getItem(fullKey)
+        : (this.storage as Map<string, string>).get(fullKey) || null;
 
       if (!serializedValue) {
         return null;
@@ -98,7 +104,11 @@ export class StorageManager {
   async remove(key: string): Promise<void> {
     try {
       const fullKey = this.getFullKey(key);
-      this.storage.removeItem(fullKey);
+      if (this.isLocalStorage) {
+        (this.storage as Storage).removeItem(fullKey);
+      } else {
+        (this.storage as Map<string, string>).delete(fullKey);
+      }
     } catch (error) {
       throw this.createError('STORAGE_REMOVE_ERROR', error);
     }
@@ -113,7 +123,11 @@ export class StorageManager {
         const keys = Object.keys(this.storage);
         keys.forEach(key => {
           if (key.startsWith(this.config.keyPrefix)) {
-            this.storage.removeItem(key);
+            if (this.isLocalStorage) {
+              (this.storage as Storage).removeItem(key);
+            } else {
+              (this.storage as Map<string, string>).delete(key);
+            }
           }
         });
       } else {
@@ -154,7 +168,7 @@ export class StorageManager {
         const keys = Object.keys(this.storage);
         keys.forEach(key => {
           if (key.startsWith(this.config.keyPrefix)) {
-            const value = this.storage.getItem(key);
+            const value = (this.storage as Storage).getItem(key);
             if (value) {
               size += key.length + value.length;
             }
@@ -185,7 +199,9 @@ export class StorageManager {
 
       for (const key of keys) {
         const fullKey = this.getFullKey(key);
-        const serializedValue = this.storage.getItem(fullKey);
+        const serializedValue = this.isLocalStorage
+          ? (this.storage as Storage).getItem(fullKey)
+          : (this.storage as Map<string, string>).get(fullKey) || null;
 
         if (serializedValue) {
           const item: StorageItem = JSON.parse(serializedValue);
@@ -208,14 +224,25 @@ export class StorageManager {
       const testKey = this.getFullKey('test');
       const testValue = 'test';
 
-      this.storage.setItem(testKey, testValue);
-      const retrievedValue = this.storage.getItem(testKey);
+      if (this.isLocalStorage) {
+        (this.storage as Storage).setItem(testKey, testValue);
+        const retrievedValue = (this.storage as Storage).getItem(testKey);
 
-      if (retrievedValue !== testValue) {
-        throw new Error('Storage test failed');
+        if (retrievedValue !== testValue) {
+          throw new Error('Storage test failed');
+        }
+
+        (this.storage as Storage).removeItem(testKey);
+      } else {
+        (this.storage as Map<string, string>).set(testKey, testValue);
+        const retrievedValue = (this.storage as Map<string, string>).get(testKey);
+
+        if (retrievedValue !== testValue) {
+          throw new Error('Storage test failed');
+        }
+
+        (this.storage as Map<string, string>).delete(testKey);
       }
-
-      this.storage.removeItem(testKey);
     } catch (error) {
       throw new Error(`Storage not available: ${error}`);
     }

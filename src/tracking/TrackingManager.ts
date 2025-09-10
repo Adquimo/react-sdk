@@ -12,25 +12,25 @@ import { SessionManager } from '../user/SessionManager';
 
 export interface CreateEventOptions {
   name: string;
-  properties?: Record<string, unknown>;
-  category?: string;
-  action?: string;
-  label?: string;
-  value?: number;
+  properties?: Record<string, unknown> | undefined;
+  category?: string | undefined;
+  action?: string | undefined;
+  label?: string | undefined;
+  value?: number | undefined;
 }
 
 export interface CreatePageViewOptions {
   url: string;
-  title?: string;
-  referrer?: string;
-  properties?: Record<string, unknown>;
+  title?: string | undefined;
+  referrer?: string | undefined;
+  properties?: Record<string, unknown> | undefined;
 }
 
 export interface CreateClickEventOptions {
   element: string;
-  selector?: string;
-  text?: string;
-  properties?: Record<string, unknown>;
+  selector?: string | undefined;
+  text?: string | undefined;
+  properties?: Record<string, unknown> | undefined;
 }
 
 export class TrackingManager {
@@ -64,8 +64,8 @@ export class TrackingManager {
         label: options.label,
         value: options.value,
         properties: options.properties || {},
-        userId: this.userManager.getUserId(),
-        sessionId: this.sessionManager.getSessionId(),
+        userId: this.userManager.getUserId() || undefined,
+        sessionId: this.sessionManager.getSessionId() || undefined,
         timestamp: new Date(),
         source: 'sdk',
         version: ADQUIMO_CONSTANTS.VERSION,
@@ -96,8 +96,8 @@ export class TrackingManager {
         title: options.title,
         referrer: options.referrer,
         properties: options.properties || {},
-        userId: this.userManager.getUserId(),
-        sessionId: this.sessionManager.getSessionId(),
+        userId: this.userManager.getUserId() || undefined,
+        sessionId: this.sessionManager.getSessionId() || undefined,
         timestamp: new Date(),
         timeOnPage: 0, // Will be updated when page is unloaded
       };
@@ -124,8 +124,8 @@ export class TrackingManager {
         selector: options.selector,
         text: options.text,
         properties: options.properties || {},
-        userId: this.userManager.getUserId(),
-        sessionId: this.sessionManager.getSessionId(),
+        userId: this.userManager.getUserId() || undefined,
+        sessionId: this.sessionManager.getSessionId() || undefined,
         timestamp: new Date(),
         coordinates: this.getMouseCoordinates(),
       };
@@ -155,8 +155,8 @@ export class TrackingManager {
           sessionId: this.sessionManager.getSessionId(),
           userId: this.userManager.getUserId(),
         },
-        userId: this.userManager.getUserId(),
-        sessionId: this.sessionManager.getSessionId(),
+        userId: this.userManager.getUserId() || undefined,
+        sessionId: this.sessionManager.getSessionId() || undefined,
         timestamp: new Date(),
         source: 'sdk',
         version: ADQUIMO_CONSTANTS.VERSION,
@@ -187,8 +187,8 @@ export class TrackingManager {
           userId: this.userManager.getUserId(),
           duration: sessionDuration,
         },
-        userId: this.userManager.getUserId(),
-        sessionId: this.sessionManager.getSessionId(),
+        userId: this.userManager.getUserId() || undefined,
+        sessionId: this.sessionManager.getSessionId() || undefined,
         timestamp: new Date(),
         source: 'sdk',
         version: ADQUIMO_CONSTANTS.VERSION,
@@ -216,8 +216,8 @@ export class TrackingManager {
           userId,
           ...properties,
         },
-        userId: this.userManager.getUserId(),
-        sessionId: this.sessionManager.getSessionId(),
+        userId: this.userManager.getUserId() || undefined,
+        sessionId: this.sessionManager.getSessionId() || undefined,
         timestamp: new Date(),
         source: 'sdk',
         version: ADQUIMO_CONSTANTS.VERSION,
@@ -245,8 +245,8 @@ export class TrackingManager {
           anonymousId,
           userId,
         },
-        userId: this.userManager.getUserId(),
-        sessionId: this.sessionManager.getSessionId(),
+        userId: this.userManager.getUserId() || undefined,
+        sessionId: this.sessionManager.getSessionId() || undefined,
         timestamp: new Date(),
         source: 'sdk',
         version: ADQUIMO_CONSTANTS.VERSION,
@@ -273,8 +273,8 @@ export class TrackingManager {
         properties: {
           previousUserId: this.userManager.getUserId(),
         },
-        userId: this.userManager.getUserId(),
-        sessionId: this.sessionManager.getSessionId(),
+        userId: this.userManager.getUserId() || undefined,
+        sessionId: this.sessionManager.getSessionId() || undefined,
         timestamp: new Date(),
         source: 'sdk',
         version: ADQUIMO_CONSTANTS.VERSION,
@@ -357,8 +357,8 @@ export class TrackingManager {
       message,
       timestamp: new Date(),
       details: {
-        userId: this.userManager.getUserId(),
-        sessionId: this.sessionManager.getSessionId(),
+        userId: this.userManager.getUserId() || undefined,
+        sessionId: this.sessionManager.getSessionId() || undefined,
       },
     };
   }

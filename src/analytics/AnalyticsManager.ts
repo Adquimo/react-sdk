@@ -11,13 +11,13 @@ export interface AnalyticsOptions {
   timeRange?: {
     start: Date;
     end: Date;
-  };
-  metrics?: string[];
-  dimensions?: string[];
-  filters?: Record<string, unknown>;
-  groupBy?: string[];
-  orderBy?: string;
-  limit?: number;
+  } | undefined;
+  metrics?: string[] | undefined;
+  dimensions?: string[] | undefined;
+  filters?: Record<string, unknown> | undefined;
+  groupBy?: string[] | undefined;
+  orderBy?: string | undefined;
+  limit?: number | undefined;
 }
 
 export interface FunnelOptions {
@@ -105,7 +105,7 @@ export class AnalyticsManager {
         steps: options.steps.map((step, index) => ({
           name: step.name,
           order: index + 1,
-          properties: step.properties,
+          properties: step.properties || undefined,
           conversionRate: Math.random() * 100, // Mock data
           dropOffRate: Math.random() * 50, // Mock data
         })),

@@ -349,7 +349,7 @@ export class SessionManager {
 
     // Extract version number (simplified)
     const match = userAgent.match(/(Chrome|Firefox|Safari|Edge|Opera)\/(\d+\.\d+)/);
-    return match ? match[2] : 'Unknown';
+    return match ? match[2] || 'Unknown' : 'Unknown';
   }
 
   /**
