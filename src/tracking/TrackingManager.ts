@@ -5,7 +5,6 @@
 
 import { v4 as uuidv4 } from 'uuid';
 import { Event, PageView, ClickEvent, AdquimoError, ADQUIMO_CONSTANTS } from '../types';
-import { EventValidator } from '../utils/EventValidator';
 import { Logger } from '../utils/Logger';
 import { UserManager } from '../user/UserManager';
 import { SessionManager } from '../user/SessionManager';
@@ -34,18 +33,15 @@ export interface CreateClickEventOptions {
 }
 
 export class TrackingManager {
-  private eventValidator: EventValidator;
   private logger: Logger;
   private userManager: UserManager;
   private sessionManager: SessionManager;
 
   constructor(
-    eventValidator: EventValidator,
     logger: Logger,
     userManager: UserManager,
     sessionManager: SessionManager,
   ) {
-    this.eventValidator = eventValidator;
     this.logger = logger;
     this.userManager = userManager;
     this.sessionManager = sessionManager;
@@ -288,49 +284,6 @@ export class TrackingManager {
     }
   }
 
-  /**
-   * Validate page view
-   */
-  private validatePageView(pageView: PageView): void {
-    if (!pageView.url || typeof pageView.url !== 'string') {
-      throw new Error('Page view URL is required and must be a string');
-    }
-
-    if (pageView.title && typeof pageView.title !== 'string') {
-      throw new Error('Page view title must be a string');
-    }
-
-    if (pageView.referrer && typeof pageView.referrer !== 'string') {
-      throw new Error('Page view referrer must be a string');
-    }
-
-    if (pageView.timeOnPage !== undefined && (typeof pageView.timeOnPage !== 'number' || pageView.timeOnPage < 0)) {
-      throw new Error('Page view time on page must be a non-negative number');
-    }
-  }
-
-  /**
-   * Validate click event
-   */
-  private validateClickEvent(clickEvent: ClickEvent): void {
-    if (!clickEvent.element || typeof clickEvent.element !== 'string') {
-      throw new Error('Click event element is required and must be a string');
-    }
-
-    if (clickEvent.selector && typeof clickEvent.selector !== 'string') {
-      throw new Error('Click event selector must be a string');
-    }
-
-    if (clickEvent.text && typeof clickEvent.text !== 'string') {
-      throw new Error('Click event text must be a string');
-    }
-
-    if (clickEvent.coordinates) {
-      if (typeof clickEvent.coordinates.x !== 'number' || typeof clickEvent.coordinates.y !== 'number') {
-        throw new Error('Click event coordinates must be numbers');
-      }
-    }
-  }
 
   /**
    * Get mouse coordinates (simplified)

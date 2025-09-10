@@ -62,7 +62,6 @@ export class AdquimoSDK {
     this.userManager = new UserManager(this.storageManager, this.logger);
     this.sessionManager = new SessionManager(this.storageManager, this.logger);
     this.trackingManager = new TrackingManager(
-      this.eventValidator,
       this.logger,
       this.userManager,
       this.sessionManager,
