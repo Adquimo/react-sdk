@@ -25,7 +25,7 @@ export interface UseAnalyticsReturn {
  */
 export function useAnalytics(
   sdk: AdquimoSDK | null,
-  options: UseAnalyticsOptions = {}
+  options: UseAnalyticsOptions = {},
 ): UseAnalyticsReturn {
   const { timeRange, refreshInterval, realTime = false } = options;
   const [data, setData] = useState<AnalyticsData | null>(null);
@@ -34,7 +34,7 @@ export function useAnalytics(
   const refreshIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // Fetch analytics data
-  const fetchData = useCallback(async () => {
+  const fetchData = useCallback(async() => {
     if (!sdk) return;
 
     setLoading(true);
@@ -52,14 +52,14 @@ export function useAnalytics(
   }, [sdk, timeRange]);
 
   // Refresh data
-  const refresh = useCallback(async () => {
+  const refresh = useCallback(async() => {
     await fetchData();
   }, [fetchData]);
 
   // Get funnel analysis
-  const getFunnelAnalysis = useCallback(async (
+  const getFunnelAnalysis = useCallback(async(
     funnelName: string,
-    steps: Array<{ name: string; event: string; properties?: Record<string, unknown> }>
+    steps: Array<{ name: string; event: string; properties?: Record<string, unknown> }>,
   ) => {
     if (!sdk) throw new Error('SDK not available');
 
@@ -85,7 +85,7 @@ export function useAnalytics(
   }, [sdk]);
 
   // Get conversion metrics
-  const getConversionMetrics = useCallback(async () => {
+  const getConversionMetrics = useCallback(async() => {
     if (!sdk) throw new Error('SDK not available');
 
     try {
@@ -105,7 +105,7 @@ export function useAnalytics(
   }, [sdk]);
 
   // Get user behavior metrics
-  const getUserBehaviorMetrics = useCallback(async () => {
+  const getUserBehaviorMetrics = useCallback(async() => {
     if (!sdk) throw new Error('SDK not available');
 
     try {
@@ -125,7 +125,7 @@ export function useAnalytics(
   }, [sdk]);
 
   // Get traffic sources
-  const getTrafficSources = useCallback(async () => {
+  const getTrafficSources = useCallback(async() => {
     if (!sdk) throw new Error('SDK not available');
 
     try {
@@ -155,7 +155,7 @@ export function useAnalytics(
   }, [sdk]);
 
   // Get device analytics
-  const getDeviceAnalytics = useCallback(async () => {
+  const getDeviceAnalytics = useCallback(async() => {
     if (!sdk) throw new Error('SDK not available');
 
     try {
@@ -186,7 +186,7 @@ export function useAnalytics(
   }, [sdk]);
 
   // Get geographic analytics
-  const getGeographicAnalytics = useCallback(async () => {
+  const getGeographicAnalytics = useCallback(async() => {
     if (!sdk) throw new Error('SDK not available');
 
     try {

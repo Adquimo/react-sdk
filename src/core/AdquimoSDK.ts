@@ -8,15 +8,10 @@ import {
   AdquimoConfig,
   User,
   Event,
-  PageView,
-  ClickEvent,
   UserSession,
   AdquimoError,
-  ApiResponse,
   BatchRequest,
-  BatchResponse,
   ADQUIMO_CONSTANTS,
-  TrackingCallback,
   ErrorCallback,
   SuccessCallback,
 } from '../types';
@@ -64,11 +59,11 @@ export class AdquimoSDK {
       this.eventValidator,
       this.logger,
       this.userManager,
-      this.sessionManager
+      this.sessionManager,
     );
     this.analyticsManager = new AnalyticsManager(
       this.networkManager,
-      this.logger
+      this.logger,
     );
   }
 
@@ -122,7 +117,7 @@ export class AdquimoSDK {
     category?: string,
     action?: string,
     label?: string,
-    value?: number
+    value?: number,
   ): Promise<void> {
     if (!this.isInitialized) {
       throw this.createError('SDK_NOT_INITIALIZED', 'SDK must be initialized before tracking events');
@@ -155,7 +150,7 @@ export class AdquimoSDK {
     url: string,
     title?: string,
     referrer?: string,
-    properties?: Record<string, unknown>
+    properties?: Record<string, unknown>,
   ): Promise<void> {
     if (!this.isInitialized) {
       throw this.createError('SDK_NOT_INITIALIZED', 'SDK must be initialized before tracking page views');
@@ -186,7 +181,7 @@ export class AdquimoSDK {
     element: string,
     selector?: string,
     text?: string,
-    properties?: Record<string, unknown>
+    properties?: Record<string, unknown>,
   ): Promise<void> {
     if (!this.isInitialized) {
       throw this.createError('SDK_NOT_INITIALIZED', 'SDK must be initialized before tracking clicks');
@@ -329,7 +324,7 @@ export class AdquimoSDK {
       };
 
       const response = await this.networkManager.sendBatch(batchRequest);
-      
+
       if (response.success) {
         this.logger.debug('Events flushed successfully', { count: events.length });
         this.callbacks.onSuccess?.(response.data);

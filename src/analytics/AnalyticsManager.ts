@@ -50,15 +50,15 @@ export class AnalyticsManager {
       this.logger.debug('Fetching analytics data', options);
 
       const response = await this.networkManager.getAnalytics(options?.timeRange);
-      
+
       if (!response.success) {
         throw response.error || new Error('Failed to fetch analytics data');
       }
 
       const data = response.data as AnalyticsData;
-      this.logger.debug('Analytics data fetched successfully', { 
+      this.logger.debug('Analytics data fetched successfully', {
         totalEvents: data.totalEvents,
-        totalUsers: data.totalUsers 
+        totalUsers: data.totalUsers,
       });
 
       return data;
@@ -76,7 +76,7 @@ export class AnalyticsManager {
       this.logger.debug('Fetching real-time analytics data');
 
       const response = await this.networkManager.getAnalytics();
-      
+
       if (!response.success) {
         throw response.error || new Error('Failed to fetch real-time analytics data');
       }
@@ -113,9 +113,9 @@ export class AnalyticsManager {
         totalDropOffRate: Math.random() * 50, // Mock data
       };
 
-      this.logger.debug('Funnel analysis fetched successfully', { 
+      this.logger.debug('Funnel analysis fetched successfully', {
         funnelName: funnel.name,
-        totalConversionRate: funnel.totalConversionRate 
+        totalConversionRate: funnel.totalConversionRate,
       });
 
       return funnel;
@@ -325,7 +325,7 @@ export class AnalyticsManager {
    */
   private createError(code: string, error: unknown): AdquimoError {
     const message = error instanceof Error ? error.message : String(error);
-    
+
     return {
       code,
       message,

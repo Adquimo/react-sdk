@@ -53,88 +53,88 @@ describe('AdquimoSDK', () => {
   });
 
   describe('initialize', () => {
-    it('should initialize successfully', async () => {
+    it('should initialize successfully', async() => {
       await expect(sdk.initialize()).resolves.not.toThrow();
     });
 
-    it('should set up callbacks', async () => {
+    it('should set up callbacks', async() => {
       const onSuccess = jest.fn();
       const onError = jest.fn();
-      
+
       sdk.setCallbacks({ onSuccess, onError });
       await sdk.initialize();
-      
+
       expect(onSuccess).toHaveBeenCalled();
     });
   });
 
   describe('track', () => {
-    beforeEach(async () => {
+    beforeEach(async() => {
       await sdk.initialize();
     });
 
-    it('should track event successfully', async () => {
+    it('should track event successfully', async() => {
       await expect(sdk.track('test-event', { test: 'value' })).resolves.not.toThrow();
     });
 
-    it('should throw error if SDK not initialized', async () => {
+    it('should throw error if SDK not initialized', async() => {
       const uninitializedSDK = new AdquimoSDK(config);
       await expect(uninitializedSDK.track('test-event')).rejects.toThrow('SDK must be initialized');
     });
   });
 
   describe('trackPageView', () => {
-    beforeEach(async () => {
+    beforeEach(async() => {
       await sdk.initialize();
     });
 
-    it('should track page view successfully', async () => {
+    it('should track page view successfully', async() => {
       await expect(sdk.trackPageView('https://example.com', 'Test Page')).resolves.not.toThrow();
     });
   });
 
   describe('trackClick', () => {
-    beforeEach(async () => {
+    beforeEach(async() => {
       await sdk.initialize();
     });
 
-    it('should track click successfully', async () => {
+    it('should track click successfully', async() => {
       await expect(sdk.trackClick('button', '#test-button')).resolves.not.toThrow();
     });
   });
 
   describe('identify', () => {
-    beforeEach(async () => {
+    beforeEach(async() => {
       await sdk.initialize();
     });
 
-    it('should identify user successfully', async () => {
+    it('should identify user successfully', async() => {
       await expect(sdk.identify('user-123', { name: 'Test User' })).resolves.not.toThrow();
     });
   });
 
   describe('alias', () => {
-    beforeEach(async () => {
+    beforeEach(async() => {
       await sdk.initialize();
     });
 
-    it('should alias user successfully', async () => {
+    it('should alias user successfully', async() => {
       await expect(sdk.alias('anonymous-123', 'user-123')).resolves.not.toThrow();
     });
   });
 
   describe('reset', () => {
-    beforeEach(async () => {
+    beforeEach(async() => {
       await sdk.initialize();
     });
 
-    it('should reset user data successfully', async () => {
+    it('should reset user data successfully', async() => {
       await expect(sdk.reset()).resolves.not.toThrow();
     });
   });
 
   describe('getCurrentUser', () => {
-    beforeEach(async () => {
+    beforeEach(async() => {
       await sdk.initialize();
     });
 
@@ -145,7 +145,7 @@ describe('AdquimoSDK', () => {
   });
 
   describe('getCurrentSession', () => {
-    beforeEach(async () => {
+    beforeEach(async() => {
       await sdk.initialize();
     });
 
@@ -156,21 +156,21 @@ describe('AdquimoSDK', () => {
   });
 
   describe('flush', () => {
-    beforeEach(async () => {
+    beforeEach(async() => {
       await sdk.initialize();
     });
 
-    it('should flush events successfully', async () => {
+    it('should flush events successfully', async() => {
       await expect(sdk.flush()).resolves.not.toThrow();
     });
   });
 
   describe('destroy', () => {
-    beforeEach(async () => {
+    beforeEach(async() => {
       await sdk.initialize();
     });
 
-    it('should destroy SDK successfully', async () => {
+    it('should destroy SDK successfully', async() => {
       await expect(sdk.destroy()).resolves.not.toThrow();
     });
   });

@@ -29,7 +29,7 @@ export class NetworkManager {
    */
   async sendBatch(batch: BatchRequest): Promise<ApiResponse<BatchResponse>> {
     const url = `${this.baseUrl}/api/${this.config.apiKey}/events/batch`;
-    
+
     const options: RequestOptions = {
       method: 'POST',
       url,
@@ -51,7 +51,7 @@ export class NetworkManager {
    */
   async sendEvent(event: unknown): Promise<ApiResponse> {
     const url = `${this.baseUrl}/api/${this.config.apiKey}/events`;
-    
+
     const options: RequestOptions = {
       method: 'POST',
       url,
@@ -74,14 +74,14 @@ export class NetworkManager {
   async getAnalytics(timeRange?: { start: Date; end: Date }): Promise<ApiResponse> {
     const url = `${this.baseUrl}/api/${this.config.apiKey}/analytics`;
     const queryParams = new URLSearchParams();
-    
+
     if (timeRange) {
       queryParams.append('start', timeRange.start.toISOString());
       queryParams.append('end', timeRange.end.toISOString());
     }
 
     const fullUrl = queryParams.toString() ? `${url}?${queryParams.toString()}` : url;
-    
+
     const options: RequestOptions = {
       method: 'GET',
       url: fullUrl,
@@ -109,7 +109,7 @@ export class NetworkManager {
         return this.handleResponse<T>(response);
       } catch (error) {
         lastError = error instanceof Error ? error : new Error(String(error));
-        
+
         // Don't retry on the last attempt
         if (attempt === retryConfig.maxRetries) {
           break;
@@ -152,11 +152,11 @@ export class NetworkManager {
    */
   private async handleResponse<T>(response: Response): Promise<ApiResponse<T>> {
     const requestId = response.headers.get('X-Request-ID') || uuidv4();
-    
+
     if (!response.ok) {
       const errorText = await response.text();
       let errorData: unknown;
-      
+
       try {
         errorData = JSON.parse(errorText);
       } catch {
@@ -186,7 +186,7 @@ export class NetworkManager {
     }
 
     const data = await response.json();
-    
+
     return {
       success: true,
       data: data as T,

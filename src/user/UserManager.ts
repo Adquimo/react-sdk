@@ -25,7 +25,7 @@ export class UserManager {
     try {
       // Load existing user from storage
       const storedUser = await this.storageManager.get<User>(ADQUIMO_CONSTANTS.STORAGE_KEYS.USER_ID);
-      
+
       if (storedUser) {
         this.currentUser = storedUser;
         this.logger.debug('User loaded from storage', { userId: storedUser.id });
@@ -97,7 +97,7 @@ export class UserManager {
 
       // Get anonymous user data
       const anonymousUser = await this.storageManager.get<User>(`anonymous_${anonymousId}`);
-      
+
       if (!anonymousUser) {
         throw new Error('Anonymous user not found');
       }
@@ -149,9 +149,9 @@ export class UserManager {
       await this.storageManager.set(ADQUIMO_CONSTANTS.STORAGE_KEYS.USER_ID, updatedUser);
       this.currentUser = updatedUser;
 
-      this.logger.debug('User properties updated', { 
-        userId: this.currentUser.id, 
-        propertiesCount: Object.keys(updatedUser.properties).length 
+      this.logger.debug('User properties updated', {
+        userId: this.currentUser.id,
+        propertiesCount: Object.keys(updatedUser.properties).length,
       });
     } catch (error) {
       this.logger.error('Failed to update user properties', error);
@@ -284,7 +284,7 @@ export class UserManager {
    */
   private createError(code: string, error: unknown): AdquimoError {
     const message = error instanceof Error ? error.message : String(error);
-    
+
     return {
       code,
       message,

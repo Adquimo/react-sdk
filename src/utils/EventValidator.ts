@@ -101,7 +101,7 @@ export class EventValidator {
         'limit',
         `Properties exceed maximum limit of ${ADQUIMO_CONSTANTS.MAX_EVENT_PROPERTIES}`,
         propertyCount,
-        ADQUIMO_CONSTANTS.MAX_EVENT_PROPERTIES
+        ADQUIMO_CONSTANTS.MAX_EVENT_PROPERTIES,
       ));
     }
 
@@ -113,7 +113,7 @@ export class EventValidator {
           `${fieldName}.${key}`,
           'format',
           'Property key must be alphanumeric with underscores and hyphens',
-          key
+          key,
         ));
       }
 
@@ -123,7 +123,7 @@ export class EventValidator {
           `${fieldName}.${key}`,
           'type',
           'Property value must be a string, number, boolean, or null',
-          value
+          value,
         ));
       }
     }
@@ -190,7 +190,7 @@ export class EventValidator {
     rule: string,
     message: string,
     actual?: unknown,
-    expected?: unknown
+    expected?: unknown,
   ): AdquimoError {
     return {
       code: 'VALIDATION_ERROR',

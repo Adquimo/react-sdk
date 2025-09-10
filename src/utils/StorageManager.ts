@@ -20,7 +20,7 @@ export class StorageManager {
   constructor(config: Required<StorageConfig>) {
     this.config = config;
     this.isLocalStorage = config.type === 'localStorage' || config.type === 'sessionStorage';
-    
+
     if (this.isLocalStorage) {
       this.storage = config.type === 'localStorage' ? localStorage : sessionStorage;
     } else {
@@ -54,7 +54,7 @@ export class StorageManager {
       };
 
       const serializedValue = JSON.stringify(item);
-      
+
       // Check storage size limit
       if (this.config.maxSize && serializedValue.length > this.config.maxSize) {
         throw new Error('Value exceeds maximum storage size');
@@ -73,13 +73,13 @@ export class StorageManager {
     try {
       const fullKey = this.getFullKey(key);
       const serializedValue = this.storage.getItem(fullKey);
-      
+
       if (!serializedValue) {
         return null;
       }
 
       const item: StorageItem = JSON.parse(serializedValue);
-      
+
       // Check TTL
       if (item.ttl && Date.now() - item.timestamp.getTime() > item.ttl) {
         await this.remove(key);
@@ -186,10 +186,10 @@ export class StorageManager {
       for (const key of keys) {
         const fullKey = this.getFullKey(key);
         const serializedValue = this.storage.getItem(fullKey);
-        
+
         if (serializedValue) {
           const item: StorageItem = JSON.parse(serializedValue);
-          
+
           if (item.ttl && now - item.timestamp.getTime() > item.ttl) {
             await this.remove(key);
           }
@@ -207,14 +207,14 @@ export class StorageManager {
     try {
       const testKey = this.getFullKey('test');
       const testValue = 'test';
-      
+
       this.storage.setItem(testKey, testValue);
       const retrievedValue = this.storage.getItem(testKey);
-      
+
       if (retrievedValue !== testValue) {
         throw new Error('Storage test failed');
       }
-      
+
       this.storage.removeItem(testKey);
     } catch (error) {
       throw new Error(`Storage not available: ${error}`);
@@ -233,7 +233,7 @@ export class StorageManager {
    */
   private createError(code: string, error: unknown): AdquimoError {
     const message = error instanceof Error ? error.message : String(error);
-    
+
     return {
       code,
       message,

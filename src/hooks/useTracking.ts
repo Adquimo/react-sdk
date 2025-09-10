@@ -5,7 +5,7 @@
 
 import { useCallback, useRef, useEffect } from 'react';
 import { AdquimoSDK } from '../core/AdquimoSDK';
-import { UseTrackingOptions, TrackingCallback, ErrorCallback } from '../types';
+import { UseTrackingOptions, ErrorCallback } from '../types';
 
 export interface UseTrackingReturn {
   track: (name: string, properties?: Record<string, unknown>) => Promise<void>;
@@ -23,7 +23,7 @@ export interface UseTrackingReturn {
  */
 export function useTracking(
   sdk: AdquimoSDK | null,
-  options: UseTrackingOptions = {}
+  options: UseTrackingOptions = {},
 ): UseTrackingReturn {
   const { enabled = true, properties = {}, debounceDelay = 0 } = options;
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -45,9 +45,9 @@ export function useTracking(
   }, [sdk]);
 
   // Track event with debouncing
-  const track = useCallback(async (
+  const track = useCallback(async(
     name: string,
-    eventProperties?: Record<string, unknown>
+    eventProperties?: Record<string, unknown>,
   ) => {
     if (!sdk || !enabled) return;
 
@@ -69,11 +69,11 @@ export function useTracking(
   }, [sdk, enabled, properties, debounceDelay]);
 
   // Track page view
-  const trackPageView = useCallback(async (
+  const trackPageView = useCallback(async(
     url: string,
     title?: string,
     referrer?: string,
-    eventProperties?: Record<string, unknown>
+    eventProperties?: Record<string, unknown>,
   ) => {
     if (!sdk || !enabled) return;
 
@@ -86,11 +86,11 @@ export function useTracking(
   }, [sdk, enabled, properties]);
 
   // Track click event
-  const trackClick = useCallback(async (
+  const trackClick = useCallback(async(
     element: string,
     selector?: string,
     text?: string,
-    eventProperties?: Record<string, unknown>
+    eventProperties?: Record<string, unknown>,
   ) => {
     if (!sdk || !enabled) return;
 
@@ -103,9 +103,9 @@ export function useTracking(
   }, [sdk, enabled, properties]);
 
   // Identify user
-  const identify = useCallback(async (
+  const identify = useCallback(async(
     userId: string,
-    userProperties?: Record<string, unknown>
+    userProperties?: Record<string, unknown>,
   ) => {
     if (!sdk || !enabled) return;
 
@@ -117,9 +117,9 @@ export function useTracking(
   }, [sdk, enabled]);
 
   // Alias user
-  const alias = useCallback(async (
+  const alias = useCallback(async(
     anonymousId: string,
-    userId: string
+    userId: string,
   ) => {
     if (!sdk || !enabled) return;
 
@@ -131,7 +131,7 @@ export function useTracking(
   }, [sdk, enabled]);
 
   // Reset user data
-  const reset = useCallback(async () => {
+  const reset = useCallback(async() => {
     if (!sdk || !enabled) return;
 
     try {

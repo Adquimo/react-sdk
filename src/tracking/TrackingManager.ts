@@ -43,7 +43,7 @@ export class TrackingManager {
     eventValidator: EventValidator,
     logger: Logger,
     userManager: UserManager,
-    sessionManager: SessionManager
+    sessionManager: SessionManager,
   ) {
     this.eventValidator = eventValidator;
     this.logger = logger;
@@ -176,7 +176,7 @@ export class TrackingManager {
   async createSessionEndEvent(): Promise<Event> {
     try {
       const sessionDuration = this.sessionManager.getSessionDuration();
-      
+
       const event: Event = {
         id: uuidv4(),
         name: ADQUIMO_CONSTANTS.EVENT_TYPES.SESSION_END,
@@ -351,7 +351,7 @@ export class TrackingManager {
    */
   private createError(code: string, error: unknown): AdquimoError {
     const message = error instanceof Error ? error.message : String(error);
-    
+
     return {
       code,
       message,

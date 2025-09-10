@@ -81,7 +81,7 @@ export function AdquimoTracker({
       if (scrollTrackedRef.current) return;
 
       const scrollPercentage = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
-      
+
       if (scrollPercentage >= scrollThreshold) {
         trackClick('scroll', 'page', 'scroll', {
           ...clickProperties,
@@ -105,7 +105,7 @@ export function AdquimoTracker({
 
       const formName = form.name || form.id || 'unknown';
       const formAction = form.action || 'unknown';
-      
+
       trackClick('form', 'form', 'submit', {
         ...clickProperties,
         formName,

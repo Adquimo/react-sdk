@@ -25,11 +25,11 @@ export interface AdquimoProviderProps {
  * AdquimoProvider component
  * Provides Adquimo SDK context to child components
  */
-export function AdquimoProvider({ 
-  config, 
-  children, 
-  onError, 
-  onSuccess 
+export function AdquimoProvider({
+  config,
+  children,
+  onError,
+  onSuccess,
 }: AdquimoProviderProps): JSX.Element {
   const [sdk, setSdk] = useState<AdquimoSDK | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
@@ -38,10 +38,10 @@ export function AdquimoProvider({
   useEffect(() => {
     let mounted = true;
 
-    const initializeSDK = async () => {
+    const initializeSDK = async() => {
       try {
         const adquimoSDK = new AdquimoSDK(config);
-        
+
         // Set up callbacks
         adquimoSDK.setCallbacks({
           onError: (error) => {
@@ -58,7 +58,7 @@ export function AdquimoProvider({
         });
 
         await adquimoSDK.initialize();
-        
+
         if (mounted) {
           setSdk(adquimoSDK);
           setIsInitialized(true);
@@ -101,10 +101,10 @@ export function AdquimoProvider({
  */
 export function useAdquimo(): AdquimoContextValue {
   const context = useContext(AdquimoContext);
-  
+
   if (!context) {
     throw new Error('useAdquimo must be used within an AdquimoProvider');
   }
-  
+
   return context;
 }

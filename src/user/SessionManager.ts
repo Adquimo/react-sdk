@@ -26,7 +26,7 @@ export class SessionManager {
     try {
       // Load existing session from storage
       const storedSession = await this.storageManager.get<UserSession>(ADQUIMO_CONSTANTS.STORAGE_KEYS.SESSION_ID);
-      
+
       if (storedSession) {
         // Check if session is still valid (not expired)
         if (this.isSessionValid(storedSession)) {
@@ -59,10 +59,10 @@ export class SessionManager {
 
       // Create new session
       const session = await this.createNewSession(userId, properties);
-      
-      this.logger.info('New session started', { 
-        sessionId: session.id, 
-        userId: session.userId 
+
+      this.logger.info('New session started', {
+        sessionId: session.id,
+        userId: session.userId,
       });
 
       return session;
@@ -94,9 +94,9 @@ export class SessionManager {
       // Save ended session
       await this.storageManager.set(ADQUIMO_CONSTANTS.STORAGE_KEYS.SESSION_ID, endedSession);
 
-      this.logger.info('Session ended', { 
-        sessionId: endedSession.id, 
-        duration: duration 
+      this.logger.info('Session ended', {
+        sessionId: endedSession.id,
+        duration,
       });
 
       // Clear current session
@@ -133,9 +133,9 @@ export class SessionManager {
       await this.storageManager.set(ADQUIMO_CONSTANTS.STORAGE_KEYS.SESSION_ID, updatedSession);
       this.currentSession = updatedSession;
 
-      this.logger.debug('Session properties updated', { 
-        sessionId: this.currentSession.id, 
-        propertiesCount: Object.keys(updatedSession.properties || {}).length 
+      this.logger.debug('Session properties updated', {
+        sessionId: this.currentSession.id,
+        propertiesCount: Object.keys(updatedSession.properties || {}).length,
       });
     } catch (error) {
       this.logger.error('Failed to update session properties', error);
@@ -316,7 +316,7 @@ export class SessionManager {
    */
   private getDeviceType(): string {
     const userAgent = navigator.userAgent.toLowerCase();
-    
+
     if (/mobile|android|iphone|ipod|blackberry|iemobile|opera mini/i.test(userAgent)) {
       return 'mobile';
     } else if (/tablet|ipad|playbook|silk/i.test(userAgent)) {
@@ -331,13 +331,13 @@ export class SessionManager {
    */
   private getBrowserName(): string {
     const userAgent = navigator.userAgent;
-    
+
     if (userAgent.includes('Chrome')) return 'Chrome';
     if (userAgent.includes('Firefox')) return 'Firefox';
     if (userAgent.includes('Safari')) return 'Safari';
     if (userAgent.includes('Edge')) return 'Edge';
     if (userAgent.includes('Opera')) return 'Opera';
-    
+
     return 'Unknown';
   }
 
@@ -346,7 +346,7 @@ export class SessionManager {
    */
   private getBrowserVersion(): string {
     const userAgent = navigator.userAgent;
-    
+
     // Extract version number (simplified)
     const match = userAgent.match(/(Chrome|Firefox|Safari|Edge|Opera)\/(\d+\.\d+)/);
     return match ? match[2] : 'Unknown';
@@ -401,7 +401,7 @@ export class SessionManager {
    */
   private createError(code: string, error: unknown): AdquimoError {
     const message = error instanceof Error ? error.message : String(error);
-    
+
     return {
       code,
       message,
